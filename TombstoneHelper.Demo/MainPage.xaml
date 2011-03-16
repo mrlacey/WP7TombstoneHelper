@@ -25,17 +25,20 @@
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <StackPanel>
-                <Button Content="assorted" />
-                <Button Content="text boxes" Click="TextBoxes_Click"  />
-                <Button Content="list boxes" Click="ListBoxes_Click" />
-                <Button Content="password boxes" />
-                <Button Content="check boxes" />
-                <Button Content="radio buttons" />
-                <Button Content="scroll viewers" />
-                <Button Content="slider" />
-                <Button Content="auto tombstone page" />
-            </StackPanel>
+            <ScrollViewer Name="ScrollViewer1">
+                <StackPanel>
+                    <Button Content="assorted" Click="Assorted_Click" />
+                    <Button Content="some" Click="Some_Click" />
+                    <Button Content="text boxes" Click="TextBoxes_Click"  />
+                    <Button Content="list boxes" Click="ListBoxes_Click" />
+                    <Button Content="password boxes" Click="PasswordBoxes_Click" />
+                    <Button Content="check boxes" Click="CheckBoxes_Click" />
+                    <Button Content="radio buttons" Click="RadioButtons_Click" />
+                    <Button Content="scroll viewers" Click="ScrollViewers_Click" />
+                    <Button Content="sliders" Click="Sliders_Click" />
+                    <Button Content="auto tombstone page" Click="AutoTombstonePage_Click" />
+                </StackPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

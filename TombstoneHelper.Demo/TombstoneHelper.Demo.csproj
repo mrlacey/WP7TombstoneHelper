@@ -63,8 +63,32 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="pages\Assorted.xaml.cs">
+      <DependentUpon>Assorted.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\AutoTombstone.xaml.cs">
+      <DependentUpon>AutoTombstone.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\CheckBoxes.xaml.cs">
+      <DependentUpon>CheckBoxes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="pages\ListBoxes.xaml.cs">
       <DependentUpon>ListBoxes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\PasswordBoxes.xaml.cs">
+      <DependentUpon>PasswordBoxes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\RadioButtons.xaml.cs">
+      <DependentUpon>RadioButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\ScrollViewerExample.xaml.cs">
+      <DependentUpon>ScrollViewerExample.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\Sliders.xaml.cs">
+      <DependentUpon>Sliders.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\Some.xaml.cs">
+      <DependentUpon>Some.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\TextBoxes.xaml.cs">
       <DependentUpon>TextBoxes.xaml</DependentUpon>
@@ -80,7 +104,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="pages\Assorted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\AutoTombstone.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\CheckBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="pages\ListBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\PasswordBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\RadioButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\ScrollViewerExample.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\Sliders.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\Some.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
