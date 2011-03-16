@@ -3,9 +3,9 @@ using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper.Demo.pages
 {
-    public partial class TextBoxes : PhoneApplicationPage
+    public partial class PasswordBoxes : PhoneApplicationPage
     {
-        public TextBoxes()
+        public PasswordBoxes()
         {
             InitializeComponent();
         }
@@ -14,7 +14,7 @@ namespace TombstoneHelper.Demo.pages
         {
             base.OnNavigatedFrom(e);
 
-            this.SaveState(typeof(TextBox));
+            this.SaveState(typeof(PasswordBox));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)

@@ -10,7 +10,7 @@ namespace TombstoneHelper
         {
             foreach (var o in toSaveFrom.ChildrenOfType<Slider>()
                                         .Where(o => !string.IsNullOrEmpty(o.Name)
-                                                 && (o.Value > 0)))
+                                                 && (o.Value > o.Minimum)))
             {
                 toSaveFrom.State.Add(string.Format("Slider^{0}", o.Name), o.Value);
             }

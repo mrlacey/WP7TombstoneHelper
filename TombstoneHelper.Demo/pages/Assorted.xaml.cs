@@ -1,11 +1,10 @@
-﻿using System.Windows.Controls;
-using Microsoft.Phone.Controls;
+﻿using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper.Demo.pages
 {
-    public partial class TextBoxes : PhoneApplicationPage
+    public partial class Assorted : PhoneApplicationPage
     {
-        public TextBoxes()
+        public Assorted()
         {
             InitializeComponent();
         }
@@ -14,7 +13,7 @@ namespace TombstoneHelper.Demo.pages
         {
             base.OnNavigatedFrom(e);
 
-            this.SaveState(typeof(TextBox));
+            this.SaveState(); // By not specifying any types all known ones will be supported
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
