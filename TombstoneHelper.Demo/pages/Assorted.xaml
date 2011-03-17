@@ -26,7 +26,22 @@
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <ScrollViewer Name="anyNameWillDo">
-                
+                <StackPanel>
+                    <TextBlock Text="a textbox" Style="{StaticResource PhoneTextTitle2Style}" />
+                    <TextBox Name="tb" />
+                    <TextBlock Text="another textbox" Style="{StaticResource PhoneTextTitle2Style}" />
+                    <TextBox Name="anotherTb" />
+                    <TextBlock Text="a passwordbox" Style="{StaticResource PhoneTextTitle2Style}" />
+                    <PasswordBox Name="pb" />
+                    <CheckBox Name="cb" Content="a checkbox" />
+                    <RadioButton Name="rb1" Content="option 1" />
+                    <RadioButton Name="rb2" Content="option 2" />
+                    <RadioButton Name="rb3" Content="option 3" />
+                    <TextBlock Text="some sliders" Style="{StaticResource PhoneTextTitle2Style}" />
+                    <Slider Name="s1" />
+                    <Slider Name="s2" />
+                    <Slider Name="s3" />
+                </StackPanel>
             </ScrollViewer>
         </Grid>
     </Grid>

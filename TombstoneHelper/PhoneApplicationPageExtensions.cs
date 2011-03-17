@@ -10,10 +10,21 @@ namespace TombstoneHelper
 {
     public static class PhoneApplicationPageExtensions
     {
+        //public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
+        //{
+        //    page.State.Clear();
+
+        //    foreach (var tombstoner in AllSupportedTombstoners(typesToSave))
+        //    {
+        //        tombstoner.Save(page);
+        //    }
+        //}
+
         public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
         {
             page.State.Clear();
 
+            // TODO: change this to use a version of save which allows us to only walk the tree once
             foreach (var tombstoner in AllSupportedTombstoners(typesToSave))
             {
                 tombstoner.Save(page);
@@ -31,6 +42,46 @@ namespace TombstoneHelper
                 if (restorers.ContainsKey(restorerType))
                 {
                     restorers[restorerType].Restore(page, key);
+                }
+            }
+        }
+
+        internal static IEnumerable<FrameworkElement> NamedChildrenOfTypes(this FrameworkElement root, IEnumerable<Type> types)
+        {
+            if (types.Contains(root.GetType()) && !string.IsNullOrEmpty(root.Name))
+            {
+                yield return root;
+            }
+
+            if (root is ScrollViewer)
+            {
+                var svc = (root as ScrollViewer).Content;
+
+                if ((svc != null) && (svc is FrameworkElement))
+                {
+                    var svcfe = svc as FrameworkElement;
+
+                    var count = VisualTreeHelper.GetChildrenCount(svcfe);
+
+                    for (var idx = 0; idx < count; idx++)
+                    {
+                        foreach (var child in NamedChildrenOfTypes(VisualTreeHelper.GetChild(svcfe, idx) as FrameworkElement, types))
+                        {
+                            yield return child;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var count = VisualTreeHelper.GetChildrenCount(root);
+
+                for (var idx = 0; idx < count; idx++)
+                {
+                    foreach (var child in NamedChildrenOfTypes(VisualTreeHelper.GetChild(root, idx) as FrameworkElement, types))
+                    {
+                        yield return child;
+                    }
                 }
             }
         }

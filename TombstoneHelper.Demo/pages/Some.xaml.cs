@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper.Demo.pages
@@ -15,7 +16,8 @@ namespace TombstoneHelper.Demo.pages
             base.OnNavigatedFrom(e);
 
             // Just the types specified will be checked and saved
-            this.SaveState(typeof(ScrollViewer), typeof(TextBox), typeof(PasswordBox));
+            // this list is just the ones used on the page and so is faster than checking all types
+            this.SaveState(typeof(TextBox), typeof(PasswordBox), typeof(CheckBox));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -23,6 +25,11 @@ namespace TombstoneHelper.Demo.pages
             base.OnNavigatedTo(e);
 
             this.RestoreState();
+        }
+
+        private void LoginClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("This is just a demo of tombstoning functionality", "just a demo", MessageBoxButton.OK);
         }
     }
 }
