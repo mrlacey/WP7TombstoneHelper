@@ -10,29 +10,21 @@ namespace TombstoneHelper
 {
     public static class PhoneApplicationPageExtensions
     {
-        //public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
-        //{
-        //    page.State.Clear();
-
-        //    foreach (var tombstoner in AllSupportedTombstoners(typesToSave))
-        //    {
-        //        tombstoner.Save(page);
-        //    }
-        //}
-
         public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
         {
             page.State.Clear();
 
-            // TODO: change this to use a version of save which allows us to only walk the tree once
-            foreach (var tombstoner in AllSupportedTombstoners(typesToSave))
+            var tombstoners = AllSupportedTombstoners(typesToSave);
+
+            foreach (var toSave in page.NamedChildrenOfTypes(tombstoners.Keys.ToArray()))
             {
-                tombstoner.Save(page);
+                tombstoners[toSave.GetType()].Save(toSave, page);
             }
         }
 
         public static void RestoreState(this PhoneApplicationPage page)
         {
+            // TODO: change this so we only have to walk the tree once
             foreach (var key in page.State.Keys)
             {
                 var restorerType = key.Split('^')[0];
@@ -86,9 +78,9 @@ namespace TombstoneHelper
             }
         }
 
-        internal static IEnumerable<T> ChildrenOfType<T>(this DependencyObject root) where T : UIElement
+        internal static IEnumerable<T> ChildrenOfType<T>(this DependencyObject root) where T : FrameworkElement
         {
-            if (root is T)
+            if ((root is T) && !string.IsNullOrEmpty((root as FrameworkElement).Name))
             {
                 yield return root as T;
             }
@@ -129,9 +121,9 @@ namespace TombstoneHelper
             }
         }
 
-        private static Dictionary<string, Tombstoner> AllTombstoneRestorers()
+        private static Dictionary<string, ICanTombstone> AllTombstoneRestorers()
         {
-            return new Dictionary<string, Tombstoner>
+            return new Dictionary<string, ICanTombstone>
                        {
                            { "TextBox", new TextBoxTombstoner() },
                            { "CheckBox", new CheckBoxTombstoner() },
@@ -143,43 +135,43 @@ namespace TombstoneHelper
                        };
         }
 
-        private static IEnumerable<Tombstoner> AllSupportedTombstoners(params Type[] filteredTypesToSave)
+        private static Dictionary<Type, ICanTombstone> AllSupportedTombstoners(params Type[] filteredTypesToSave)
         {
-            var result = new List<Tombstoner>();
+            var result = new Dictionary<Type, ICanTombstone>();
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(TextBox)))
             {
-                result.Add(new TextBoxTombstoner());
+                result.Add(typeof(TextBox), new TextBoxTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(CheckBox)))
             {
-                result.Add(new CheckBoxTombstoner());
+                result.Add(typeof(CheckBox), new CheckBoxTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(PasswordBox)))
             {
-                result.Add(new PasswordBoxTombstoner());
+                result.Add(typeof(PasswordBox), new PasswordBoxTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(Slider)))
             {
-                result.Add(new SliderTombstoner());
+                result.Add(typeof(Slider), new SliderTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(RadioButton)))
             {
-                result.Add(new RadioButtonTombstoner());
+                result.Add(typeof(RadioButton), new RadioButtonTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ScrollViewer)))
             {
-                result.Add(new ScrollViewerTombstoner());
+                result.Add(typeof(ScrollViewer), new ScrollViewerTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ListBox)))
             {
-                result.Add(new ListBoxTombstoner());
+                result.Add(typeof(ListBox), new ListBoxTombstoner());
             }
 
             return result;

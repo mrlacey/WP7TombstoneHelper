@@ -1,23 +1,28 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal class TextBoxTombstoner : Tombstoner
+    internal class TextBoxTombstoner : ICanTombstone
     {
-        internal override void Save(PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
         {
-            foreach (var o in toSaveFrom.ChildrenOfType<TextBox>()
-                                        .Where(o => !string.IsNullOrEmpty(o.Name)
-                                                 && !o.Name.Equals("DisabledOrReadonlyContent")
-                                                 && !string.IsNullOrEmpty(o.Text)))
+            if (element is TextBox)
             {
-                toSaveFrom.State.Add(string.Format("TextBox^{0}", o.Name), o.Text);
+                var tb = element as TextBox;
+
+                if (!string.IsNullOrEmpty(tb.Name)
+                 && !tb.Name.Equals("DisabledOrReadonlyContent")
+                 && !string.IsNullOrEmpty(tb.Text))
+                {
+                    toSaveFrom.State.Add(string.Format("TextBox^{0}", tb.Name), tb.Text);
+                }
             }
         }
 
-        internal override void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
         {
             var cb = toRestoreTo.ChildrenOfType<TextBox>()
                                 .First(o => o.Name.Equals(stateKey.Split('^')[1]));

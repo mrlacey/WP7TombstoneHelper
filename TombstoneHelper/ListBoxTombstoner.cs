@@ -1,26 +1,32 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal class ListBoxTombstoner : Tombstoner
+    internal class ListBoxTombstoner : ICanTombstone
     {
-        internal override void Save(PhoneApplicationPage toSaveFrom)
+        // TODO: also add storing of selected item
+        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
         {
-            foreach (var o in toSaveFrom.ChildrenOfType<ListBox>()
-                                        .Where(o => !string.IsNullOrEmpty(o.Name)))
+            if (element is ListBox)
             {
-                var sv = o.ChildrenOfType<ScrollViewer>().First();
+                var lb = element as ListBox;
 
-                if (sv.VerticalOffset > 0)
+                if (!string.IsNullOrEmpty(lb.Name))
                 {
-                    toSaveFrom.State.Add(string.Format("ListBox^{0}", o.Name), sv.VerticalOffset);
+                    var sv = lb.ChildrenOfType<ScrollViewer>().First();
+
+                    if (sv.VerticalOffset > 0)
+                    {
+                        toSaveFrom.State.Add(string.Format("ListBox^{0}", lb.Name), sv.VerticalOffset);
+                    }
                 }
             }
         }
 
-        internal override void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
         {
             var lb = toRestoreTo.ChildrenOfType<ListBox>()
                                 .First(o => o.Name.Equals(stateKey.Split('^')[1]));

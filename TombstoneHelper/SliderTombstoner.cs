@@ -1,22 +1,27 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal class SliderTombstoner : Tombstoner
+    internal class SliderTombstoner : ICanTombstone
     {
-        internal override void Save(PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
         {
-            foreach (var o in toSaveFrom.ChildrenOfType<Slider>()
-                                        .Where(o => !string.IsNullOrEmpty(o.Name)
-                                                 && (o.Value > o.Minimum)))
+            if (element is Slider)
             {
-                toSaveFrom.State.Add(string.Format("Slider^{0}", o.Name), o.Value);
+                var s = element as Slider;
+
+                if (!string.IsNullOrEmpty(s.Name)
+                    && (s.Value > s.Minimum))
+                {
+                    toSaveFrom.State.Add(string.Format("Slider^{0}", s.Name), s.Value);
+                }
             }
         }
 
-        internal override void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
         {
             var s = toRestoreTo.ChildrenOfType<Slider>()
                                .First(o => o.Name.Equals(stateKey.Split('^')[1]));

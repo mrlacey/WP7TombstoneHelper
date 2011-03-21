@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal class ScrollViewerTombstoner : Tombstoner
+    internal class ScrollViewerTombstoner : ICanTombstone
     {
-        internal override void Save(PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
         {
-            foreach (var o in toSaveFrom.ChildrenOfType<ScrollViewer>()
-                                        .Where(o => !string.IsNullOrEmpty(o.Name)
-                                                 && (o.VerticalOffset > 0)))
+            if (element is ScrollViewer)
             {
-                toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", o.Name), o.VerticalOffset);
+                var sv = element as ScrollViewer;
+
+                if (!string.IsNullOrEmpty(sv.Name)
+                    && (sv.VerticalOffset > 0))
+                {
+                    toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), sv.VerticalOffset);
+                }
             }
         }
 
-        internal override void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
         {
             var sv = toRestoreTo.ChildrenOfType<ScrollViewer>()
                                 .First(o => o.Name.Equals(stateKey.Split('^')[1]));
