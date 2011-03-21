@@ -1,22 +1,27 @@
 ﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal class RadioButtonTombstoner : Tombstoner
+    internal class RadioButtonTombstoner : ICanTombstone
     {
-        internal override void Save(PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
         {
-            foreach (var o in toSaveFrom.ChildrenOfType<RadioButton>()
-                                        .Where(o => !string.IsNullOrEmpty(o.Name)
-                                                 && (o.IsChecked ?? false)))
+            if (element is RadioButton)
             {
-                toSaveFrom.State.Add(string.Format("RadioButton^{0}", o.Name), true);
+                var rb = element as RadioButton;
+
+                if (!string.IsNullOrEmpty(rb.Name)
+                    && (rb.IsChecked ?? false))
+                {
+                    toSaveFrom.State.Add(string.Format("RadioButton^{0}", rb.Name), true);
+                }
             }
         }
 
-        internal override void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
         {
             var rb = toRestoreTo.ChildrenOfType<RadioButton>()
                                 .First(o => o.Name.Equals(stateKey.Split('^')[1]));

@@ -59,7 +59,7 @@
     <Compile Include="ScrollViewerTombstoner.cs" />
     <Compile Include="SliderTombstoner.cs" />
     <Compile Include="TextBoxTombstoner.cs" />
-    <Compile Include="Tombstoner.cs" />
+    <Compile Include="ICanTombstone.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
