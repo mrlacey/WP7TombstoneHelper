@@ -24,12 +24,12 @@ namespace TombstoneHelper
             }
         }
 
-        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(FrameworkElement toRestoreTo, object details)
         {
-            var sv = toRestoreTo.ChildrenOfType<ScrollViewer>()
-                                .First(o => o.Name.Equals(stateKey.Split('^')[1]));
-
-            ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(toRestoreTo.State[stateKey].ToString())));
+            if (toRestoreTo is ScrollViewer)
+            {
+                ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToVerticalOffset(double.Parse(details.ToString())));
+            }
         }
 
         private static List<Action> workItems;

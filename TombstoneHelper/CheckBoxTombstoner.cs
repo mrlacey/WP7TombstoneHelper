@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
@@ -21,12 +20,12 @@ namespace TombstoneHelper
             }
         }
 
-        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
+        public void Restore(FrameworkElement toRestoreTo, object details)
         {
-            var tb = toRestoreTo.ChildrenOfType<CheckBox>()
-                                .First(o => o.Name.Equals(stateKey.Split('^')[1]));
-
-            tb.IsChecked = true;
+            if (toRestoreTo is CheckBox)
+            {
+                (toRestoreTo as CheckBox).IsChecked = true;
+            }
         }
     }
 }

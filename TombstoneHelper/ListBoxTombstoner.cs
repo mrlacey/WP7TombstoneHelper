@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
@@ -37,6 +38,19 @@ namespace TombstoneHelper
                        .FirstOrDefault();
 
             ScrollViewerTombstoner.ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(toRestoreTo.State[stateKey].ToString())));
+        }
+
+        public void Restore(FrameworkElement toRestoreTo, object details)
+        {
+            if (toRestoreTo is ListBox)
+            {
+                (toRestoreTo as ListBox).ApplyTemplate();
+
+                var sv = (toRestoreTo as ListBox).ChildrenOfType<ScrollViewer>()
+                                                 .FirstOrDefault();
+
+                ScrollViewerTombstoner.ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(details.ToString())));
+            }
         }
     }
 }
