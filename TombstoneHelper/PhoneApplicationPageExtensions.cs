@@ -24,16 +24,35 @@ namespace TombstoneHelper
 
         public static void RestoreState(this PhoneApplicationPage page)
         {
-            // TODO: change this so we only have to walk the tree once
-            foreach (var key in page.State.Keys)
+            if (page.State.Keys.Count > 0)
             {
-                var restorerType = key.Split('^')[0];
+                var typesToRestore = new List<Type>();
 
-                var restorers = AllTombstoneRestorers();
+                var restorersAndDetails = new Dictionary<string, KeyValuePair<object, ICanTombstone>>();
 
-                if (restorers.ContainsKey(restorerType))
+                var allRestorers = AllTombstoneRestorers();
+
+                foreach (var key in page.State.Keys)
                 {
-                    restorers[restorerType].Restore(page, key);
+                    var restorerType = key.Split('^')[0];
+
+                    if (allRestorers.ContainsKey(restorerType))
+                    {
+                        if (!typesToRestore.Contains(allRestorers[restorerType].Key))
+                        {
+                            typesToRestore.Add(allRestorers[restorerType].Key);
+                        }
+
+                        restorersAndDetails.Add(key.Split('^')[1], new KeyValuePair<object, ICanTombstone>(page.State[key], allRestorers[restorerType].Value));
+                    }
+                }
+
+                foreach (var toRestore in page.NamedChildrenOfTypes(typesToRestore))
+                {
+                    if (restorersAndDetails.Keys.Contains(toRestore.Name))
+                    {
+                        restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
+                    }
                 }
             }
         }
@@ -121,17 +140,17 @@ namespace TombstoneHelper
             }
         }
 
-        private static Dictionary<string, ICanTombstone> AllTombstoneRestorers()
-        {
-            return new Dictionary<string, ICanTombstone>
+        private static Dictionary<string, KeyValuePair<Type, ICanTombstone>> AllTombstoneRestorers()
+        { 
+            return new Dictionary<string, KeyValuePair<Type, ICanTombstone>>
                        {
-                           { "TextBox", new TextBoxTombstoner() },
-                           { "CheckBox", new CheckBoxTombstoner() },
-                           { "PasswordBox", new PasswordBoxTombstoner() },
-                           { "Slider", new SliderTombstoner() },
-                           { "RadioButton", new RadioButtonTombstoner() },
-                           { "ScrollViewer", new ScrollViewerTombstoner() },
-                           { "ListBox", new ListBoxTombstoner() }
+                           { "TextBox", new KeyValuePair<Type, ICanTombstone>(typeof(TextBox), new TextBoxTombstoner()) },
+                           { "CheckBox", new KeyValuePair<Type, ICanTombstone>(typeof(CheckBox), new CheckBoxTombstoner()) },
+                           { "PasswordBox", new KeyValuePair<Type, ICanTombstone>(typeof(PasswordBox), new PasswordBoxTombstoner()) },
+                           { "Slider", new KeyValuePair<Type, ICanTombstone>(typeof(Slider), new SliderTombstoner()) },
+                           { "RadioButton", new KeyValuePair<Type, ICanTombstone>(typeof(RadioButton), new RadioButtonTombstoner()) },
+                           { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
+                           { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) }
                        };
         }
 

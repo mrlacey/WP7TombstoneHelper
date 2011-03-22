@@ -7,6 +7,6 @@ namespace TombstoneHelper
     {
         void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom);
 
-        void Restore(PhoneApplicationPage toRestoreTo, string stateKey);
+        void Restore(FrameworkElement toRestoreTo, object details);
     }
 }
