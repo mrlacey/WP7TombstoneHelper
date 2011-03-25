@@ -12,13 +12,25 @@ namespace TombstoneHelper
     {
         public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
         {
+            page.SaveState(int.MaxValue, typesToSave);
+        }
+
+        public static void SaveState(this PhoneApplicationPage page, int maxItems, params Type[] typesToSave)
+        {
             page.State.Clear();
 
             var tombstoners = AllSupportedTombstoners(typesToSave);
 
+            var counter = 0;
+
             foreach (var toSave in page.NamedChildrenOfTypes(tombstoners.Keys.ToArray()))
             {
                 tombstoners[toSave.GetType()].Save(toSave, page);
+
+                if (++counter == maxItems)
+                {
+                    break;
+                }
             }
         }
 
