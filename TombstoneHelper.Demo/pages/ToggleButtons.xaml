@@ -1,5 +1,5 @@
 ﻿<phone:PhoneApplicationPage 
-    x:Class="TombstoneHelper.Demo.pages.Assorted"
+    x:Class="TombstoneHelper.Demo.pages.ToggleButtons"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -21,30 +21,17 @@
 
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="TOMBSTONE HELPER DEMO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="assorted" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle" Text="togglebuttons" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <ScrollViewer Name="anyNameWillDo">
-                <StackPanel>
-                    <TextBlock Text="a textbox" Style="{StaticResource PhoneTextTitle2Style}" />
-                    <TextBox Name="tb" />
-                    <TextBlock Text="another textbox" Style="{StaticResource PhoneTextTitle2Style}" />
-                    <TextBox Name="anotherTb" />
-                    <TextBlock Text="a passwordbox" Style="{StaticResource PhoneTextTitle2Style}" />
-                    <PasswordBox Name="pb" />
-                    <CheckBox Name="cb" Content="a checkbox" />
-                    <RadioButton Name="rb1" Content="option 1" />
-                    <RadioButton Name="rb2" Content="option 2" />
-                    <RadioButton Name="rb3" Content="option 3" />
-                    <TextBlock Text="some sliders" Style="{StaticResource PhoneTextTitle2Style}" />
-                    <Slider Name="s1" />
-                    <Slider Name="s2" />
-                    <Slider Name="s3" />
-                    <ToggleButton Name="tog1" Content="ToggleButton" />
-                </StackPanel>
-            </ScrollViewer>
+            <StackPanel>
+                <ToggleButton Name="first" Content="first (has name)" />
+                <ToggleButton Content="second (doesn't have name)" />
+                <ToggleButton Name="third" Content="third (has name)" />
+                <ToggleButton Name="fourth" Content="fourth (has name)" />
+                <ToggleButton Name="fifth" Content="fifth (has name)" />
+            </StackPanel>
         </Grid>
     </Grid>
-
 </phone:PhoneApplicationPage>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,6 +7,7 @@ using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
+    // TODO: also add support for horizontal offsets
     internal class ScrollViewerTombstoner : ICanTombstone
     {
         public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)

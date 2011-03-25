@@ -36,6 +36,7 @@
                     <Button Content="radio buttons" Click="RadioButtons_Click" />
                     <Button Content="scroll viewers" Click="ScrollViewers_Click" />
                     <Button Content="sliders" Click="Sliders_Click" />
+                    <Button Content="toggle buttons" Click="ToggleButtons_Click" />
                     <Button Content="auto tombstone page" Click="AutoTombstonePage_Click" />
                 </StackPanel>
             </ScrollViewer>

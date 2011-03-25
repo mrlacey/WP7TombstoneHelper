@@ -75,5 +75,10 @@ namespace TombstoneHelper.Demo
         {
             NavigationService.Navigate(new Uri("/pages/AutoTombstone.xaml", UriKind.Relative));
         }
+
+        private void ToggleButtons_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/pages/ToggleButtons.xaml", UriKind.Relative));
+        }
     }
 }
