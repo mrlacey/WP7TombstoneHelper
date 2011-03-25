@@ -93,6 +93,9 @@
     <Compile Include="pages\TextBoxes.xaml.cs">
       <DependentUpon>TextBoxes.xaml</DependentUpon>
     </Compile>
+    <Compile Include="pages\ToggleButtons.xaml.cs">
+      <DependentUpon>ToggleButtons.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="pages\TextBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\ToggleButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
