@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Microsoft.Phone.Controls;
 
@@ -162,7 +163,8 @@ namespace TombstoneHelper
                            { "Slider", new KeyValuePair<Type, ICanTombstone>(typeof(Slider), new SliderTombstoner()) },
                            { "RadioButton", new KeyValuePair<Type, ICanTombstone>(typeof(RadioButton), new RadioButtonTombstoner()) },
                            { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
-                           { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) }
+                           { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) },
+                           { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) }
                        };
         }
 
@@ -202,7 +204,12 @@ namespace TombstoneHelper
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ListBox)))
             {
-                result.Add(typeof(ListBox), new ListBoxTombstoner());
+                result.Add(typeof (ListBox), new ListBoxTombstoner());
+            }
+
+            if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ToggleButton)))
+            {
+                result.Add(typeof(ToggleButton), new ToggleButtonTombstoner());
             }
 
             return result;
