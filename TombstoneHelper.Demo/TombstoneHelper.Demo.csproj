@@ -72,6 +72,9 @@
     <Compile Include="pages\CheckBoxes.xaml.cs">
       <DependentUpon>CheckBoxes.xaml</DependentUpon>
     </Compile>
+    <Compile Include="pages\HorizontalScrollViewer.xaml.cs">
+      <DependentUpon>HorizontalScrollViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="pages\ListBoxes.xaml.cs">
       <DependentUpon>ListBoxes.xaml</DependentUpon>
     </Compile>
@@ -116,6 +119,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="pages\CheckBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\HorizontalScrollViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

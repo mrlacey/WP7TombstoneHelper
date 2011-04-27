@@ -16,10 +16,17 @@ namespace TombstoneHelper
             {
                 var sv = element as ScrollViewer;
 
-                if (!string.IsNullOrEmpty(sv.Name)
-                    && (sv.VerticalOffset > 0))
+                if (!string.IsNullOrEmpty(sv.Name))
                 {
-                    toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), sv.VerticalOffset);
+                    if (sv.HorizontalOffset > 0)
+                    {
+                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), string.Format("H:{0}", sv.HorizontalOffset));
+                    }
+
+                    if (sv.VerticalOffset > 0)
+                    {
+                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), sv.VerticalOffset);
+                    }
                 }
             }
         }
@@ -28,7 +35,14 @@ namespace TombstoneHelper
         {
             if (toRestoreTo is ScrollViewer)
             {
-                ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToVerticalOffset(double.Parse(details.ToString())));
+                if (details.ToString().StartsWith("H:"))
+                {
+                    ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToHorizontalOffset(double.Parse(details.ToString().Substring(2))));
+                }
+                else
+                {
+                    ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToVerticalOffset(double.Parse(details.ToString())));
+                }
             }
         }
 
