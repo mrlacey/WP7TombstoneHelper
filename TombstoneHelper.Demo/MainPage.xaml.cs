@@ -12,9 +12,9 @@ namespace TombstoneHelper.Demo
             InitializeComponent();
         }
 
-        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            base.OnNavigatedFrom(e);
+            base.OnNavigatingFrom(e);
 
             this.SaveState(typeof(ScrollViewer));
         }
@@ -79,6 +79,11 @@ namespace TombstoneHelper.Demo
         private void ToggleButtons_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/pages/ToggleButtons.xaml", UriKind.Relative));
+        }
+
+        private void HorizontalScrollViewers_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/pages/HorizontalScrollViewer.xaml", UriKind.Relative));
         }
     }
 }

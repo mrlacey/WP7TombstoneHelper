@@ -5,17 +5,36 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
     public static class PhoneApplicationPageExtensions
     {
+        // This to be called in OnNavigatingFrom
+        public static void SaveState(this PhoneApplicationPage page, NavigatingCancelEventArgs e, params Type[] typesToSave)
+        {
+            page.SaveState(e, int.MaxValue, typesToSave);
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState(this PhoneApplicationPage page, NavigatingCancelEventArgs e, int maxItems, params Type[] typesToSave)
+        {
+            // Improve performance by not saving state if it is about to be destroyed
+            if (e.NavigationMode != NavigationMode.Back)
+            {
+                page.SaveState(maxItems, typesToSave);
+            }
+        }
+
+        // This to be called in OnNavigatedFrom
         public static void SaveState(this PhoneApplicationPage page, params Type[] typesToSave)
         {
             page.SaveState(int.MaxValue, typesToSave);
         }
 
+        // This to be called in OnNavigatedFrom
         public static void SaveState(this PhoneApplicationPage page, int maxItems, params Type[] typesToSave)
         {
             page.State.Clear();
@@ -154,18 +173,18 @@ namespace TombstoneHelper
         }
 
         private static Dictionary<string, KeyValuePair<Type, ICanTombstone>> AllTombstoneRestorers()
-        { 
+        {
             return new Dictionary<string, KeyValuePair<Type, ICanTombstone>>
-                       {
-                           { "TextBox", new KeyValuePair<Type, ICanTombstone>(typeof(TextBox), new TextBoxTombstoner()) },
-                           { "CheckBox", new KeyValuePair<Type, ICanTombstone>(typeof(CheckBox), new CheckBoxTombstoner()) },
-                           { "PasswordBox", new KeyValuePair<Type, ICanTombstone>(typeof(PasswordBox), new PasswordBoxTombstoner()) },
-                           { "Slider", new KeyValuePair<Type, ICanTombstone>(typeof(Slider), new SliderTombstoner()) },
-                           { "RadioButton", new KeyValuePair<Type, ICanTombstone>(typeof(RadioButton), new RadioButtonTombstoner()) },
-                           { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
-                           { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) },
-                           { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) }
-                       };
+            {
+                { "TextBox", new KeyValuePair<Type, ICanTombstone>(typeof(TextBox), new TextBoxTombstoner()) },
+                { "CheckBox", new KeyValuePair<Type, ICanTombstone>(typeof(CheckBox), new CheckBoxTombstoner()) },
+                { "PasswordBox", new KeyValuePair<Type, ICanTombstone>(typeof(PasswordBox), new PasswordBoxTombstoner()) },
+                { "Slider", new KeyValuePair<Type, ICanTombstone>(typeof(Slider), new SliderTombstoner()) },
+                { "RadioButton", new KeyValuePair<Type, ICanTombstone>(typeof(RadioButton), new RadioButtonTombstoner()) },
+                { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
+                { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) },
+                { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) }
+            };
         }
 
         private static Dictionary<Type, ICanTombstone> AllSupportedTombstoners(params Type[] filteredTypesToSave)
@@ -204,7 +223,7 @@ namespace TombstoneHelper
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ListBox)))
             {
-                result.Add(typeof (ListBox), new ListBoxTombstoner());
+                result.Add(typeof(ListBox), new ListBoxTombstoner());
             }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ToggleButton)))
