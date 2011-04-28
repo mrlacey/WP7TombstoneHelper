@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    // TODO: also add support for horizontal offsets
     internal class ScrollViewerTombstoner : ICanTombstone
     {
         public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
@@ -18,14 +14,9 @@ namespace TombstoneHelper
 
                 if (!string.IsNullOrEmpty(sv.Name))
                 {
-                    if (sv.HorizontalOffset > 0)
+                    if ((sv.HorizontalOffset > 0) || (sv.VerticalOffset > 0))
                     {
-                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), string.Format("H:{0}", sv.HorizontalOffset));
-                    }
-
-                    if (sv.VerticalOffset > 0)
-                    {
-                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), sv.VerticalOffset);
+                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), string.Format("{0}:{1}", sv.HorizontalOffset, sv.VerticalOffset));
                     }
                 }
             }
@@ -35,44 +26,17 @@ namespace TombstoneHelper
         {
             if (toRestoreTo is ScrollViewer)
             {
-                if (details.ToString().StartsWith("H:"))
+                var detail = details.ToString().Split(':');
+
+                if (detail[0] != "0")
                 {
-                    ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToHorizontalOffset(double.Parse(details.ToString().Substring(2))));
+                    RenderScheduler.ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToHorizontalOffset(double.Parse(detail[0])));
                 }
-                else
+
+                if (detail[1] != "0")
                 {
-                    ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToVerticalOffset(double.Parse(details.ToString())));
+                    RenderScheduler.ScheduleOnNextRender(() => (toRestoreTo as ScrollViewer).ScrollToVerticalOffset(double.Parse(detail[1])));
                 }
-            }
-        }
-
-        private static List<Action> workItems;
-
-        // See http://msdn.microsoft.com/en-us/library/ff967548(v=vs.92).aspx
-        public static void ScheduleOnNextRender(Action action)
-        {
-            if (workItems == null)
-            {
-                workItems = new List<Action>();
-                CompositionTarget.Rendering += DoWorkOnRender;
-            }
-
-            workItems.Add(action);
-        }
-
-        internal static void DoWorkOnRender(object sender, EventArgs args)
-        {
-            CompositionTarget.Rendering -= DoWorkOnRender;
-            List<Action> work = workItems;
-            workItems = null;
-
-            foreach (Action action in work)
-            {
-                try
-                {
-                    action();
-                }
-                catch { }
             }
         }
     }

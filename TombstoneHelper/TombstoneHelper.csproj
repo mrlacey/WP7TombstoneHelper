@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="AutoTombstonePage.cs" />
     <Compile Include="CheckBoxTombstoner.cs" />
+    <Compile Include="RenderScheduler.cs" />
+    <Compile Include="PhoneApplicationPageTombstoner.cs" />
     <Compile Include="ListBoxTombstoner.cs" />
     <Compile Include="PhoneApplicationPageExtensions.cs" />
     <Compile Include="PasswordBoxTombstoner.cs" />

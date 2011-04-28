@@ -16,7 +16,10 @@ namespace TombstoneHelper
                     && !tb.Name.Equals("DisabledOrReadonlyContent")
                     && !string.IsNullOrEmpty(tb.Text))
                 {
-                    toSaveFrom.State.Add(string.Format("TextBox^{0}", tb.Name), tb.Text);
+                    toSaveFrom.State.Add(string.Format("TextBox^{0}", tb.Name),
+                                         string.Format("{0}:{1}:{2}", tb.Text,
+                                                                      tb.SelectionStart,
+                                                                      tb.SelectionLength));
                 }
             }
         }
@@ -25,7 +28,12 @@ namespace TombstoneHelper
         {
             if (toRestoreTo is TextBox)
             {
-                (toRestoreTo as TextBox).Text = details.ToString();
+                var detail = details.ToString().Split(':');
+
+                (toRestoreTo as TextBox).Text = detail[0];
+
+                (toRestoreTo as TextBox).SelectionStart = int.Parse(detail[1]);
+                (toRestoreTo as TextBox).SelectionLength = int.Parse(detail[2]);
             }
         }
     }

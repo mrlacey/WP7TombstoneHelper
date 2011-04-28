@@ -27,19 +27,6 @@ namespace TombstoneHelper
             }
         }
 
-        public void Restore(PhoneApplicationPage toRestoreTo, string stateKey)
-        {
-            var lb = toRestoreTo.ChildrenOfType<ListBox>()
-                                .First(o => o.Name.Equals(stateKey.Split('^')[1]));
-
-            lb.ApplyTemplate();
-
-            var sv = lb.ChildrenOfType<ScrollViewer>()
-                       .FirstOrDefault();
-
-            ScrollViewerTombstoner.ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(toRestoreTo.State[stateKey].ToString())));
-        }
-
         public void Restore(FrameworkElement toRestoreTo, object details)
         {
             if (toRestoreTo is ListBox)
@@ -49,7 +36,7 @@ namespace TombstoneHelper
                 var sv = (toRestoreTo as ListBox).ChildrenOfType<ScrollViewer>()
                                                  .FirstOrDefault();
 
-                ScrollViewerTombstoner.ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(details.ToString())));
+                RenderScheduler.ScheduleOnNextRender(() => sv.ScrollToVerticalOffset(double.Parse(details.ToString())));
             }
         }
     }
