@@ -43,6 +43,11 @@ namespace TombstoneHelper
 
             var counter = 0;
 
+            if (tombstoners.ContainsKey(typeof(PhoneApplicationPage)))
+            {
+                tombstoners[typeof(PhoneApplicationPage)].Save(page, page);
+            }
+
             foreach (var toSave in page.NamedChildrenOfTypes(tombstoners.Keys.ToArray()))
             {
                 tombstoners[toSave.GetType()].Save(toSave, page);
@@ -70,12 +75,22 @@ namespace TombstoneHelper
 
                     if (allRestorers.ContainsKey(restorerType))
                     {
-                        if (!typesToRestore.Contains(allRestorers[restorerType].Key))
+                        if (restorerType == "PhoneApplicationPage")
                         {
-                            typesToRestore.Add(allRestorers[restorerType].Key);
+                            allRestorers[restorerType].Value.Restore(page, key.Split('^')[1]);
                         }
+                        else
+                        {
+                            if (!typesToRestore.Contains(allRestorers[restorerType].Key))
+                            {
+                                typesToRestore.Add(allRestorers[restorerType].Key);
+                            }
 
-                        restorersAndDetails.Add(key.Split('^')[1], new KeyValuePair<object, ICanTombstone>(page.State[key], allRestorers[restorerType].Value));
+                            restorersAndDetails.Add(key.Split('^')[1],
+                                                    new KeyValuePair<object, ICanTombstone>(page.State[key],
+                                                                                            allRestorers[restorerType].
+                                                                                                Value));
+                        }
                     }
                 }
 
@@ -183,13 +198,19 @@ namespace TombstoneHelper
                 { "RadioButton", new KeyValuePair<Type, ICanTombstone>(typeof(RadioButton), new RadioButtonTombstoner()) },
                 { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
                 { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) },
-                { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) }
+                { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) },
+                { "PhoneApplicationPage", new KeyValuePair<Type, ICanTombstone>(typeof(PhoneApplicationPage), new PhoneApplicationPageTombstoner()) }
             };
         }
 
         private static Dictionary<Type, ICanTombstone> AllSupportedTombstoners(params Type[] filteredTypesToSave)
         {
             var result = new Dictionary<Type, ICanTombstone>();
+
+            if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(PhoneApplicationPage)))
+            {
+                result.Add(typeof(PhoneApplicationPage), new PhoneApplicationPageTombstoner());
+            }
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(TextBox)))
             {
