@@ -14,6 +14,8 @@ namespace TombstoneHelper
     {
         private static int pivotItemIndex = -1;
 
+        private static bool inAListbox = false;
+
         private const string PAGE_CONTAINS_PIVOT = "PageContainsPivot";
 
         private static Pivot pivotToRestoreTo;
@@ -72,8 +74,23 @@ namespace TombstoneHelper
                 {
                     pivotItemIndex = -1;
                 }
+                else if (toSave is FakeFrameworkElementActingAsListBoxStartIndicator)
+                {
+                    inAListbox = true;
+                }
+                else if (toSave is FakeFrameworkElementActingAsListBoxEndIndicator)
+                {
+                    inAListbox = false;
+                }
                 else
                 {
+                    // Don't include the ScrollViewer inside a ListBox - this is handled by the ListBox
+                    // Both are included if no types are specified
+                    if (inAListbox && (toSave is ScrollViewer))
+                    {
+                        continue;
+                    }
+
                     tombstoners[toSave.GetType()].Save(toSave, pivotItemIndex, page);
 
                     if (++counter == maxItems)
@@ -112,33 +129,30 @@ namespace TombstoneHelper
 
                     var allRestorers = AllTombstoneRestorers();
 
-                    foreach (var key in page.State.Keys)
+                    foreach (var key in page.State.Keys.Where(k => k.Contains("^")))
                     {
-                        if (key.Contains("^"))
+                        var keyParts = key.Split('^');
+
+                        var restorerType = keyParts[0];
+
+                        if (allRestorers.ContainsKey(restorerType))
                         {
-                            var keyParts = key.Split('^');
-
-                            var restorerType = keyParts[0];
-
-                            if (allRestorers.ContainsKey(restorerType))
+                            if (restorerType == "PhoneApplicationPage")
                             {
-                                if (restorerType == "PhoneApplicationPage")
+                                allRestorers[restorerType].Value.Restore(page, keyParts[1]);
+                            }
+                            else
+                            {
+                                if (!typesToRestore.Contains(allRestorers[restorerType].Key))
                                 {
-                                    allRestorers[restorerType].Value.Restore(page, keyParts[1]);
+                                    typesToRestore.Add(allRestorers[restorerType].Key);
                                 }
-                                else
-                                {
-                                    if (!typesToRestore.Contains(allRestorers[restorerType].Key))
-                                    {
-                                        typesToRestore.Add(allRestorers[restorerType].Key);
-                                    }
 
-                                    pivotItemIndexes.Add(keyParts[1], keyParts[2]);
+                                pivotItemIndexes.Add(keyParts[1], keyParts[2]);
 
-                                    restorersAndDetails.Add(keyParts[1],
-                                                            new KeyValuePair<object, ICanTombstone>(page.State[key],
-                                                                                                    allRestorers[restorerType].Value));
-                                }
+                                restorersAndDetails.Add(keyParts[1],
+                                                        new KeyValuePair<object, ICanTombstone>(page.State[key],
+                                                                                                allRestorers[restorerType].Value));
                             }
                         }
                     }
@@ -158,7 +172,6 @@ namespace TombstoneHelper
                             else
                             {
                                 op.Invoke();
-                                //restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
                             }
                         }
                     }
@@ -169,29 +182,37 @@ namespace TombstoneHelper
                     {
                         if ((itemIndex.Value != "-1") && !string.IsNullOrEmpty(itemIndex.Key))
                         {
-                            var p2r = (pivotToRestoreTo.Items[int.Parse(itemIndex.Value)] as PivotItem);
+                            var p2r = pivotToRestoreTo.Items[int.Parse(itemIndex.Value)] as PivotItem;
 
-                            KeyValuePair<string, string> index = itemIndex;
-                            pivotItemReloaders.Add(int.Parse(itemIndex.Value), (s, e) =>
+                            var key = int.Parse(itemIndex.Value);
+
+                            if (!pivotItemReloaders.ContainsKey(key))
                             {
-                                bool unloaded = false;
+                                KeyValuePair<string, string> index = itemIndex;
 
-                                foreach (var toRestore in p2r.NamedChildrenOfTypes(typesToRestore))
+                                EventHandler reloader = (s, e) =>
                                 {
-                                    if (restorersAndDetails.Keys.Contains(toRestore.Name))
+                                    bool unloaded = false;
+
+                                    foreach (var toRestore in p2r.NamedChildrenOfTypes(typesToRestore))
                                     {
-                                        if (!unloaded)
+                                        if (restorersAndDetails.Keys.Contains(toRestore.Name))
                                         {
-                                            p2r.LayoutUpdated -= pivotItemReloaders[int.Parse(index.Value)];
-                                            unloaded = true;
+                                            if (!unloaded)
+                                            {
+                                                p2r.LayoutUpdated -= pivotItemReloaders[int.Parse(index.Value)];
+                                                unloaded = true;
+                                            }
+
+                                            restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
                                         }
-
-                                        restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
                                     }
-                                }
-                            });
+                                };
 
-                            p2r.LayoutUpdated += pivotItemReloaders[int.Parse(itemIndex.Value)];
+                                pivotItemReloaders.Add(key, reloader);
+
+                                p2r.LayoutUpdated += pivotItemReloaders[int.Parse(itemIndex.Value)];
+                            }
                         }
                     }
                 }
@@ -238,6 +259,11 @@ namespace TombstoneHelper
                     yield return new FakeFrameworkElementActingAsPivotItemStartIndicator(((Pivot)(root.Parent)).Items.IndexOf(root));
                 }
 
+                if (root is ListBox)
+                {
+                    yield return new FakeFrameworkElementActingAsListBoxStartIndicator();
+                }
+
                 var count = VisualTreeHelper.GetChildrenCount(root);
 
                 for (var idx = 0; idx < count; idx++)
@@ -251,6 +277,11 @@ namespace TombstoneHelper
                 if (root is PivotItem)
                 {
                     yield return new FakeFrameworkElementActingAsPivotItemEndIndicator();
+                }
+
+                if (root is ListBox)
+                {
+                    yield return new FakeFrameworkElementActingAsListBoxEndIndicator();
                 }
             }
         }

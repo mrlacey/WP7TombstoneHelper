@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="AutoTombstonePage.cs" />
     <Compile Include="CheckBoxTombstoner.cs" />
+    <Compile Include="FakeFrameworkElementActingAsListBoxEndIndicator.cs" />
+    <Compile Include="FakeFrameworkElementActingAsListBoxStartIndicator.cs" />
     <Compile Include="FakeFrameworkElementActingAsPivotIndicator.cs" />
     <Compile Include="FakeFrameworkElementActingAsPivotItemEndIndicator.cs" />
     <Compile Include="FakeFrameworkElementActingAsPivotItemStartIndicator.cs" />

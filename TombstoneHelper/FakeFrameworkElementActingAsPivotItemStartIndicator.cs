@@ -8,7 +8,7 @@ namespace TombstoneHelper
 
         public FakeFrameworkElementActingAsPivotItemStartIndicator(int pivotItemIndex)
         {
-            PivotItemIndex = pivotItemIndex;
+            this.PivotItemIndex = pivotItemIndex;
         }
     }
 }
