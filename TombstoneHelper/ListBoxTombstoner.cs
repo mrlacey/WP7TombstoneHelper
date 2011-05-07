@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
@@ -9,7 +8,7 @@ namespace TombstoneHelper
     internal class ListBoxTombstoner : ICanTombstone
     {
         // TODO: also add storing of selected item
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is ListBox)
             {
@@ -21,7 +20,7 @@ namespace TombstoneHelper
 
                     if (sv.VerticalOffset > 0)
                     {
-                        toSaveFrom.State.Add(string.Format("ListBox^{0}", lb.Name), sv.VerticalOffset);
+                        toSaveFrom.State.Add(string.Format("ListBox^{0}^{1}", lb.Name, pivotItemIndex), sv.VerticalOffset);
                     }
                 }
             }

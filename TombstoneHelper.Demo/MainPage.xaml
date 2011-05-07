@@ -39,6 +39,7 @@
                     <Button Content="sliders" Click="Sliders_Click" />
                     <Button Content="toggle buttons" Click="ToggleButtons_Click" />
                     <Button Content="auto tombstone page" Click="AutoTombstonePage_Click" />
+                    <Button Content="pivot page" Click="PivotPage_Click" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>

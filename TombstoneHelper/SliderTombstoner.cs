@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
@@ -8,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class SliderTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is Slider)
             {
@@ -17,7 +15,7 @@ namespace TombstoneHelper
                 if (!string.IsNullOrEmpty(s.Name)
                     && (s.Value > s.Minimum))
                 {
-                    toSaveFrom.State.Add(string.Format("Slider^{0}", s.Name), s.Value);
+                    toSaveFrom.State.Add(string.Format("Slider^{0}^{1}", s.Name, pivotItemIndex), s.Value);
                 }
             }
         }

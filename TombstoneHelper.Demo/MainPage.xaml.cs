@@ -85,5 +85,10 @@ namespace TombstoneHelper.Demo
         {
             NavigationService.Navigate(new Uri("/pages/HorizontalScrollViewer.xaml", UriKind.Relative));
         }
+
+        private void PivotPage_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/pages/PivotExample.xaml", UriKind.Relative));
+        }
     }
 }

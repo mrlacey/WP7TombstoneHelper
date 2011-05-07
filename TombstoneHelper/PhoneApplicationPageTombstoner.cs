@@ -10,13 +10,14 @@ namespace TombstoneHelper
     /// </summary>
     internal class PhoneApplicationPageTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        // a page should never be inside a pivot so we can ignore the item index
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             Control focusedControl = FocusManager.GetFocusedElement() as Control;
 
             if (focusedControl != null)
             {
-                toSaveFrom.State.Add(string.Format("PhoneApplicationPage^{0}", focusedControl.Name), true);
+                toSaveFrom.State.Add(string.Format("PhoneApplicationPage^{0}^-1", focusedControl.Name), true);
             }
         }
 
