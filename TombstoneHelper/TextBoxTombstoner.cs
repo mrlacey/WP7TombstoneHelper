@@ -6,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class TextBoxTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is TextBox)
             {
@@ -16,7 +16,7 @@ namespace TombstoneHelper
                     && !tb.Name.Equals("DisabledOrReadonlyContent")
                     && !string.IsNullOrEmpty(tb.Text))
                 {
-                    toSaveFrom.State.Add(string.Format("TextBox^{0}", tb.Name),
+                    toSaveFrom.State.Add(string.Format("TextBox^{0}^{1}", tb.Name, pivotItemIndex),
                                          string.Format("{0}:{1}:{2}", tb.Text,
                                                                       tb.SelectionStart,
                                                                       tb.SelectionLength));

@@ -6,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class CheckBoxTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is CheckBox)
             {
@@ -15,7 +15,7 @@ namespace TombstoneHelper
                 if (!string.IsNullOrEmpty(cb.Name)
                  && (cb.IsChecked ?? false))
                 {
-                    toSaveFrom.State.Add(string.Format("CheckBox^{0}", cb.Name), true);
+                    toSaveFrom.State.Add(string.Format("CheckBox^{0}^{1}", cb.Name, pivotItemIndex), true);
                 }
             }
         }

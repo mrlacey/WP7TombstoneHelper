@@ -12,6 +12,12 @@ namespace TombstoneHelper
 {
     public static class PhoneApplicationPageExtensions
     {
+        private static int pivotItemIndex = -1;
+
+        private const string PAGE_CONTAINS_PIVOT = "PageContainsPivot";
+
+        private static Pivot pivotToRestoreTo;
+
         // This to be called in OnNavigatingFrom
         public static void SaveState(this PhoneApplicationPage page, NavigatingCancelEventArgs e, params Type[] typesToSave)
         {
@@ -45,16 +51,35 @@ namespace TombstoneHelper
 
             if (tombstoners.ContainsKey(typeof(PhoneApplicationPage)))
             {
-                tombstoners[typeof(PhoneApplicationPage)].Save(page, page);
+                tombstoners[typeof(PhoneApplicationPage)].Save(page, pivotItemIndex, page);
             }
 
             foreach (var toSave in page.NamedChildrenOfTypes(tombstoners.Keys.ToArray()))
             {
-                tombstoners[toSave.GetType()].Save(toSave, page);
-
-                if (++counter == maxItems)
+                if (toSave is FakeFrameworkElementActingAsPivotIndicator)
                 {
-                    break;
+                    // There should never be multiple pivots on a page, but just in case
+                    if (!page.State.ContainsKey(PAGE_CONTAINS_PIVOT))
+                    {
+                        page.State.Add(PAGE_CONTAINS_PIVOT, true);
+                    }
+                }
+                else if (toSave is FakeFrameworkElementActingAsPivotItemStartIndicator)
+                {
+                    pivotItemIndex = (toSave as FakeFrameworkElementActingAsPivotItemStartIndicator).PivotItemIndex;
+                }
+                else if (toSave is FakeFrameworkElementActingAsPivotItemEndIndicator)
+                {
+                    pivotItemIndex = -1;
+                }
+                else
+                {
+                    tombstoners[toSave.GetType()].Save(toSave, pivotItemIndex, page);
+
+                    if (++counter == maxItems)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -63,52 +88,128 @@ namespace TombstoneHelper
         {
             if (page.State.Keys.Count > 0)
             {
-                var typesToRestore = new List<Type>();
-
-                var restorersAndDetails = new Dictionary<string, KeyValuePair<object, ICanTombstone>>();
-
-                var allRestorers = AllTombstoneRestorers();
-
-                foreach (var key in page.State.Keys)
+                if (page.State.ContainsKey(PAGE_CONTAINS_PIVOT))
                 {
-                    var restorerType = key.Split('^')[0];
+                    pivotToRestoreTo = page.ChildrenOfType<Pivot>().First();
 
-                    if (allRestorers.ContainsKey(restorerType))
+                    page.State.Remove(PAGE_CONTAINS_PIVOT);
+
+                    // If we get here `pivot` should never be null but let's keep the compiler happy
+                    if (pivotToRestoreTo != null)
                     {
-                        if (restorerType == "PhoneApplicationPage")
-                        {
-                            allRestorers[restorerType].Value.Restore(page, key.Split('^')[1]);
-                        }
-                        else
-                        {
-                            if (!typesToRestore.Contains(allRestorers[restorerType].Key))
-                            {
-                                typesToRestore.Add(allRestorers[restorerType].Key);
-                            }
-
-                            restorersAndDetails.Add(key.Split('^')[1],
-                                                    new KeyValuePair<object, ICanTombstone>(page.State[key],
-                                                                                            allRestorers[restorerType].
-                                                                                                Value));
-                        }
+                        // If the page contains a Pivot control we'll only be able to walk the full visual tree
+                        // (so we can restore anything in a PivotItem) once the Pivot has Loaded
+                        pivotToRestoreTo.Loaded += (s, e) => page.RestoreState();
                     }
                 }
-
-                foreach (var toRestore in page.NamedChildrenOfTypes(typesToRestore))
+                else
                 {
-                    if (restorersAndDetails.Keys.Contains(toRestore.Name))
+                    var typesToRestore = new List<Type>();
+
+                    var pivotItemIndexes = new Dictionary<string, string>();
+
+                    var restorersAndDetails = new Dictionary<string, KeyValuePair<object, ICanTombstone>>();
+
+                    var allRestorers = AllTombstoneRestorers();
+
+                    foreach (var key in page.State.Keys)
                     {
-                        restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
+                        if (key.Contains("^"))
+                        {
+                            var keyParts = key.Split('^');
+
+                            var restorerType = keyParts[0];
+
+                            if (allRestorers.ContainsKey(restorerType))
+                            {
+                                if (restorerType == "PhoneApplicationPage")
+                                {
+                                    allRestorers[restorerType].Value.Restore(page, keyParts[1]);
+                                }
+                                else
+                                {
+                                    if (!typesToRestore.Contains(allRestorers[restorerType].Key))
+                                    {
+                                        typesToRestore.Add(allRestorers[restorerType].Key);
+                                    }
+
+                                    pivotItemIndexes.Add(keyParts[1], keyParts[2]);
+
+                                    restorersAndDetails.Add(keyParts[1],
+                                                            new KeyValuePair<object, ICanTombstone>(page.State[key],
+                                                                                                    allRestorers[restorerType].Value));
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (var toRestore in page.NamedChildrenOfTypes(typesToRestore))
+                    {
+                        if (restorersAndDetails.Keys.Contains(toRestore.Name))
+                        {
+                            FrameworkElement restore = toRestore;
+                            Action op = () => restorersAndDetails[restore.Name].Value.Restore(restore, restorersAndDetails[restore.Name].Key);
+
+                            if (pivotItemIndexes[toRestore.Name] != "-1")
+                            {
+                                (pivotToRestoreTo.Items[int.Parse(pivotItemIndexes[toRestore.Name])] as PivotItem).Loaded += (s, e) => op.Invoke();
+                                pivotItemIndexes.Remove(toRestore.Name);
+                            }
+                            else
+                            {
+                                op.Invoke();
+                                //restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
+                            }
+                        }
+                    }
+
+                    pivotItemReloaders = new Dictionary<int, EventHandler>(pivotToRestoreTo == null ? 0 : pivotToRestoreTo.Items.Count);
+
+                    foreach (var itemIndex in pivotItemIndexes)
+                    {
+                        if ((itemIndex.Value != "-1") && !string.IsNullOrEmpty(itemIndex.Key))
+                        {
+                            var p2r = (pivotToRestoreTo.Items[int.Parse(itemIndex.Value)] as PivotItem);
+
+                            KeyValuePair<string, string> index = itemIndex;
+                            pivotItemReloaders.Add(int.Parse(itemIndex.Value), (s, e) =>
+                            {
+                                bool unloaded = false;
+
+                                foreach (var toRestore in p2r.NamedChildrenOfTypes(typesToRestore))
+                                {
+                                    if (restorersAndDetails.Keys.Contains(toRestore.Name))
+                                    {
+                                        if (!unloaded)
+                                        {
+                                            p2r.LayoutUpdated -= pivotItemReloaders[int.Parse(index.Value)];
+                                            unloaded = true;
+                                        }
+
+                                        restorersAndDetails[toRestore.Name].Value.Restore(toRestore, restorersAndDetails[toRestore.Name].Key);
+                                    }
+                                }
+                            });
+
+                            p2r.LayoutUpdated += pivotItemReloaders[int.Parse(itemIndex.Value)];
+                        }
                     }
                 }
             }
         }
+
+        private static Dictionary<int, EventHandler> pivotItemReloaders;
 
         internal static IEnumerable<FrameworkElement> NamedChildrenOfTypes(this FrameworkElement root, IEnumerable<Type> types)
         {
             if (types.Contains(root.GetType()) && !string.IsNullOrEmpty(root.Name))
             {
                 yield return root;
+            }
+
+            if (root is Pivot)
+            {
+                yield return new FakeFrameworkElementActingAsPivotIndicator();
             }
 
             if (root is ScrollViewer)
@@ -132,6 +233,11 @@ namespace TombstoneHelper
             }
             else
             {
+                if (root is PivotItem)
+                {
+                    yield return new FakeFrameworkElementActingAsPivotItemStartIndicator(((Pivot)(root.Parent)).Items.IndexOf(root));
+                }
+
                 var count = VisualTreeHelper.GetChildrenCount(root);
 
                 for (var idx = 0; idx < count; idx++)
@@ -140,6 +246,11 @@ namespace TombstoneHelper
                     {
                         yield return child;
                     }
+                }
+
+                if (root is PivotItem)
+                {
+                    yield return new FakeFrameworkElementActingAsPivotItemEndIndicator();
                 }
             }
         }
@@ -199,7 +310,8 @@ namespace TombstoneHelper
                 { "ScrollViewer", new KeyValuePair<Type, ICanTombstone>(typeof(ScrollViewer), new ScrollViewerTombstoner()) },
                 { "ListBox", new KeyValuePair<Type, ICanTombstone>(typeof(ListBox), new ListBoxTombstoner()) },
                 { "ToggleButton", new KeyValuePair<Type, ICanTombstone>(typeof(ToggleButton), new ToggleButtonTombstoner()) },
-                { "PhoneApplicationPage", new KeyValuePair<Type, ICanTombstone>(typeof(PhoneApplicationPage), new PhoneApplicationPageTombstoner()) }
+                { "PhoneApplicationPage", new KeyValuePair<Type, ICanTombstone>(typeof(PhoneApplicationPage), new PhoneApplicationPageTombstoner()) },
+                { "Pivot", new KeyValuePair<Type, ICanTombstone>(typeof(Pivot), new PivotTombstoner()) }
             };
         }
 
@@ -250,6 +362,11 @@ namespace TombstoneHelper
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(ToggleButton)))
             {
                 result.Add(typeof(ToggleButton), new ToggleButtonTombstoner());
+            }
+
+            if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(Pivot)))
+            {
+                result.Add(typeof(Pivot), new PivotTombstoner());
             }
 
             return result;

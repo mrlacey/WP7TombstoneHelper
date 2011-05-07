@@ -6,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class RadioButtonTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is RadioButton)
             {
@@ -15,7 +15,7 @@ namespace TombstoneHelper
                 if (!string.IsNullOrEmpty(rb.Name)
                     && (rb.IsChecked ?? false))
                 {
-                    toSaveFrom.State.Add(string.Format("RadioButton^{0}", rb.Name), true);
+                    toSaveFrom.State.Add(string.Format("RadioButton^{0}^{1}", rb.Name, pivotItemIndex), true);
                 }
             }
         }

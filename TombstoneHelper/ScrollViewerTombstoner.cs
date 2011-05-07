@@ -6,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class ScrollViewerTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is ScrollViewer)
             {
@@ -16,7 +16,7 @@ namespace TombstoneHelper
                 {
                     if ((sv.HorizontalOffset > 0) || (sv.VerticalOffset > 0))
                     {
-                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}", sv.Name), string.Format("{0}:{1}", sv.HorizontalOffset, sv.VerticalOffset));
+                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}^{1}", sv.Name, pivotItemIndex), string.Format("{0}:{1}", sv.HorizontalOffset, sv.VerticalOffset));
                     }
                 }
             }

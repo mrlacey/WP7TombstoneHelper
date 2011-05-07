@@ -6,7 +6,7 @@ namespace TombstoneHelper
 {
     internal class PasswordBoxTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is PasswordBox)
             {
@@ -16,7 +16,7 @@ namespace TombstoneHelper
                  && !pb.Name.Equals("DisabledContent")
                  && !string.IsNullOrEmpty(pb.Password))
                 {
-                    toSaveFrom.State.Add(string.Format("PasswordBox^{0}", pb.Name), pb.Password);
+                    toSaveFrom.State.Add(string.Format("PasswordBox^{0}^{1}", pb.Name, pivotItemIndex), pb.Password);
                 }
             }
         }

@@ -1,21 +1,12 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
     public class ToggleButtonTombstoner : ICanTombstone
     {
-        public void Save(FrameworkElement element, PhoneApplicationPage toSaveFrom)
+        public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is ToggleButton)
             {
@@ -24,7 +15,7 @@ namespace TombstoneHelper
                 if (!string.IsNullOrEmpty(tb.Name)
                  && (tb.IsChecked ?? false))
                 {
-                    toSaveFrom.State.Add(string.Format("ToggleButton^{0}", tb.Name), true);
+                    toSaveFrom.State.Add(string.Format("ToggleButton^{0}^{1}", tb.Name, pivotItemIndex), true);
                 }
             }
         }
