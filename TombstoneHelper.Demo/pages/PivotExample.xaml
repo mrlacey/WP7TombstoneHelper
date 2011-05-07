@@ -243,6 +243,23 @@
                 </ListBox>
 
             </controls:PivotItem>
+            <controls:PivotItem Header="item6">
+                <ScrollViewer Name="p6sv">
+                    <StackPanel>
+                        <TextBox Name="p6tb" />
+                        <PasswordBox Name="p6pb" />
+                        <CheckBox Name="p6cb" />
+                        <RadioButton Name="p6rb1" />
+                        <RadioButton Name="p6rb2" />
+                        <RadioButton Name="p6rb3" />
+                        <RadioButton Name="p6rb4" />
+                        <RadioButton Name="p6rb5" />
+                        <RadioButton Name="p6rb6" />
+                        <Slider Name="p6s" />
+                        <ToggleButton Name="p6tog" />
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:PivotItem>
         </controls:Pivot>
     </Grid>
 

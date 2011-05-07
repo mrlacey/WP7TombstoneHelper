@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Microsoft.Phone.Controls;
+﻿using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper.Demo.pages
 {
@@ -14,7 +13,7 @@ namespace TombstoneHelper.Demo.pages
         {
             base.OnNavigatingFrom(e);
 
-            this.SaveState(e, typeof(Pivot), typeof(ListBox));
+            this.SaveState(e);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
