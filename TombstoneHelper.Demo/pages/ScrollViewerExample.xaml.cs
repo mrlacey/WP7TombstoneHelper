@@ -14,7 +14,10 @@ namespace TombstoneHelper.Demo.pages
         {
             base.OnNavigatedFrom(e);
 
-            this.SaveState(1, typeof(ScrollViewer)); // We know there's only one so we can improve performance by stopping after we find it
+            // We know there's only one so we can improve performance by stopping after we find it
+            // These 2 methods are identical
+            this.SaveState<ScrollViewer>(1);
+            //this.SaveState(1, typeof(ScrollViewer));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
