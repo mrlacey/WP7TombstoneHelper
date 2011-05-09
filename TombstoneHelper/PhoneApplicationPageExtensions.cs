@@ -21,6 +21,42 @@ namespace TombstoneHelper
         private static Pivot pivotToRestoreTo;
 
         // This to be called in OnNavigatingFrom
+        public static void SaveState<T>(this PhoneApplicationPage page, NavigatingCancelEventArgs e)
+        {
+            page.SaveState(e, int.MaxValue, new[] { typeof(T) });
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState<T>(this PhoneApplicationPage page, NavigatingCancelEventArgs e, int maxItems)
+        {
+            page.SaveState(e, maxItems, new[] { typeof(T) });
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState<T1, T2>(this PhoneApplicationPage page, NavigatingCancelEventArgs e)
+        {
+            page.SaveState(e, int.MaxValue, new[] { typeof(T1), typeof(T2) });
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState<T1, T2>(this PhoneApplicationPage page, NavigatingCancelEventArgs e, int maxItems)
+        {
+            page.SaveState(e, maxItems, new[] { typeof(T1), typeof(T2) });
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState<T1, T2, T3>(this PhoneApplicationPage page, NavigatingCancelEventArgs e)
+        {
+            page.SaveState(e, int.MaxValue, new[] { typeof(T1), typeof(T2), typeof(T3) });
+        }
+
+        // This to be called in OnNavigatingFrom
+        public static void SaveState<T1, T2, T3>(this PhoneApplicationPage page, NavigatingCancelEventArgs e, int maxItems)
+        {
+            page.SaveState(e, maxItems, new[] { typeof(T1), typeof(T2), typeof(T3) });
+        }
+
+        // This to be called in OnNavigatingFrom
         public static void SaveState(this PhoneApplicationPage page, NavigatingCancelEventArgs e, params Type[] typesToSave)
         {
             page.SaveState(e, int.MaxValue, typesToSave);
@@ -34,6 +70,43 @@ namespace TombstoneHelper
             {
                 page.SaveState(maxItems, typesToSave);
             }
+        }
+
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T>(this PhoneApplicationPage page)
+        {
+            page.SaveState(int.MaxValue, new[] { typeof(T) });
+        }
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T>(this PhoneApplicationPage page, int maxItems)
+        {
+            page.SaveState(maxItems, new[] { typeof(T) });
+        }
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T1, T2>(this PhoneApplicationPage page)
+        {
+            page.SaveState(int.MaxValue, new[] { typeof(T1), typeof(T2) });
+        }
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T1, T2>(this PhoneApplicationPage page, int maxItems)
+        {
+            page.SaveState(maxItems, new[] { typeof(T1), typeof(T2) });
+        }
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T1, T2, T3>(this PhoneApplicationPage page)
+        {
+            page.SaveState(int.MaxValue, new[] { typeof(T1), typeof(T2), typeof(T3) });
+        }
+
+        // This to be called in OnNavigatedFrom
+        public static void SaveState<T1, T2, T3>(this PhoneApplicationPage page, int maxItems)
+        {
+            page.SaveState(maxItems, new[] { typeof(T1), typeof(T2), typeof(T3) });
         }
 
         // This to be called in OnNavigatedFrom
