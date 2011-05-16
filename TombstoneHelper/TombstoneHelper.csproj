@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Bin\Release</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
@@ -42,7 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
-    <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
