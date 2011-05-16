@@ -57,6 +57,7 @@
     <Compile Include="FakeFrameworkElementActingAsPivotIndicator.cs" />
     <Compile Include="FakeFrameworkElementActingAsPivotItemEndIndicator.cs" />
     <Compile Include="FakeFrameworkElementActingAsPivotItemStartIndicator.cs" />
+    <Compile Include="PanoramaTombstoner.cs" />
     <Compile Include="PivotTombstoner.cs" />
     <Compile Include="RenderScheduler.cs" />
     <Compile Include="PhoneApplicationPageTombstoner.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="TextBoxTombstoner.cs" />
     <Compile Include="ICanTombstone.cs" />
     <Compile Include="ToggleButtonTombstoner.cs" />
+    <Compile Include="TombstoneHelperExtensibility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
