@@ -180,7 +180,7 @@ namespace TombstoneHelper
             {
                 if (page.State.ContainsKey(PAGE_CONTAINS_PIVOT))
                 {
-                    pivotToRestoreTo = page.ChildrenOfType<Pivot>().First();
+                    pivotToRestoreTo = page.ChildrenOfType<Pivot>().FirstOrDefault();
 
                     page.State.Remove(PAGE_CONTAINS_PIVOT);
 
@@ -404,7 +404,7 @@ namespace TombstoneHelper
 
         private static Dictionary<string, KeyValuePair<Type, ICanTombstone>> AllTombstoneRestorers()
         {
-            return new Dictionary<string, KeyValuePair<Type, ICanTombstone>>
+            var result = new Dictionary<string, KeyValuePair<Type, ICanTombstone>>
             {
                 { "TextBox", new KeyValuePair<Type, ICanTombstone>(typeof(TextBox), new TextBoxTombstoner()) },
                 { "CheckBox", new KeyValuePair<Type, ICanTombstone>(typeof(CheckBox), new CheckBoxTombstoner()) },
@@ -417,6 +417,14 @@ namespace TombstoneHelper
                 { "PhoneApplicationPage", new KeyValuePair<Type, ICanTombstone>(typeof(PhoneApplicationPage), new PhoneApplicationPageTombstoner()) },
                 { "Pivot", new KeyValuePair<Type, ICanTombstone>(typeof(Pivot), new PivotTombstoner()) }
             };
+
+            // TODO: need to persist registered tombstoners
+            foreach (var customTombstoner in TombstoneHelperExtensibility.CustomTombstoners)
+            {
+                result.Add(customTombstoner.Key.Name, new KeyValuePair<Type, ICanTombstone>(customTombstoner.Key, customTombstoner.Value));
+            }
+
+            return result;
         }
 
         private static Dictionary<Type, ICanTombstone> AllSupportedTombstoners(params Type[] filteredTypesToSave)
@@ -471,6 +479,11 @@ namespace TombstoneHelper
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(Pivot)))
             {
                 result.Add(typeof(Pivot), new PivotTombstoner());
+            }
+
+            foreach (var customTombstoner in TombstoneHelperExtensibility.CustomTombstoners)
+            {
+                result.Add(customTombstoner.Key, customTombstoner.Value);
             }
 
             return result;

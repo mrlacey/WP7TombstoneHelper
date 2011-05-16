@@ -16,9 +16,9 @@ namespace TombstoneHelper
 
                 if (!string.IsNullOrEmpty(lb.Name))
                 {
-                    var sv = lb.ChildrenOfType<ScrollViewer>().First();
+                    var sv = lb.ChildrenOfType<ScrollViewer>().FirstOrDefault();
 
-                    if (sv.VerticalOffset > 0)
+                    if ((sv != null) && (sv.VerticalOffset > 0))
                     {
                         toSaveFrom.State.Add(string.Format("ListBox^{0}^{1}", lb.Name, pivotItemIndex), sv.VerticalOffset);
                     }

@@ -16,7 +16,7 @@ namespace TombstoneHelper.Demo
         {
             base.OnNavigatingFrom(e);
 
-            this.SaveState(typeof(ScrollViewer));
+            this.SaveState(e, typeof(ScrollViewer));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -89,6 +89,11 @@ namespace TombstoneHelper.Demo
         private void PivotPage_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/pages/PivotExample.xaml", UriKind.Relative));
+        }
+
+        private void PanoramaPage_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/pages/PanoramaExample.xaml", UriKind.Relative));
         }
     }
 }

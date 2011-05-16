@@ -3,7 +3,7 @@ using Microsoft.Phone.Controls;
 
 namespace TombstoneHelper
 {
-    internal interface ICanTombstone
+    public interface ICanTombstone
     {
         void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom);
 
