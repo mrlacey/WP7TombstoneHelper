@@ -429,6 +429,17 @@ namespace TombstoneHelper
 
         private static Dictionary<Type, ICanTombstone> AllSupportedTombstoners(params Type[] filteredTypesToSave)
         {
+            // There will be errors if the unsupported types have been passed in the filter.
+            // Highlight this by raising an error
+            foreach (var type in filteredTypesToSave)
+            {
+                if (!SupportedTypes.Contains(type)
+                 && !TombstoneHelperExtensibility.CustomTombstoners.ContainsKey(type))
+                {
+                    throw new ArgumentException(string.Format("TombstoneHelper doesn't know how to handle the type: {0}{1}You could create and register a custom tombstoner for this type or remove it from the list of types to use.", type.ToString(), System.Environment.NewLine));
+                }
+            }
+
             var result = new Dictionary<Type, ICanTombstone>();
 
             if ((filteredTypesToSave.Count() == 0) || filteredTypesToSave.Contains(typeof(PhoneApplicationPage)))
@@ -487,6 +498,26 @@ namespace TombstoneHelper
             }
 
             return result;
+        }
+
+        private static List<Type> SupportedTypes
+        {
+            get
+            {
+                return new List<Type>
+                           {
+                               typeof(PhoneApplicationPage),
+                               typeof(TextBox),
+                               typeof(CheckBox),
+                               typeof(PasswordBox),
+                               typeof(Slider),
+                               typeof(RadioButton),
+                               typeof(ScrollViewer),
+                               typeof(ListBox),
+                               typeof(ToggleButton),
+                               typeof(Pivot)
+                           };
+            }
         }
     }
 }
