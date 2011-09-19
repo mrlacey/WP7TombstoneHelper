@@ -11,19 +11,15 @@ namespace TombstoneHelper.Demo.pages
             InitializeComponent();
         }
 
-        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            base.OnNavigatedFrom(e);
-
             // Just the types specified will be checked and saved
             // this list is just the ones used on the page and so is faster than checking all types
-            this.SaveState(typeof(TextBox), typeof(PasswordBox), typeof(CheckBox));
+            this.SaveState(e, typeof(TextBox), typeof(PasswordBox), typeof(CheckBox));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-
             this.RestoreState();
         }
 
