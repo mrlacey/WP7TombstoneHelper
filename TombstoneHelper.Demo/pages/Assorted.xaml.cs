@@ -9,17 +9,13 @@ namespace TombstoneHelper.Demo.pages
             InitializeComponent();
         }
 
-        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            base.OnNavigatedFrom(e);
-
-            this.SaveState(); // By not specifying any types all known ones will be supported
+            this.SaveState(e); // By not specifying any types all known ones will be supported
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-
             this.RestoreState();
         }
     }

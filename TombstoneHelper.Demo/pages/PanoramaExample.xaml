@@ -30,6 +30,51 @@
             <controls:PanoramaItem Header="item2">
                 <Grid/>
             </controls:PanoramaItem>
+
+            <!--Panorama item three-->
+            <controls:PanoramaItem Header="item3">
+                <ListBox Name="SaveMyState">
+                    <ListBoxItem>
+                        <TextBlock Text="item a" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item b" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item c" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item d" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item e" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item f" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item g" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item h" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item i" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item j" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item k" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item l" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <TextBlock Text="item m" Style="{StaticResource PhoneTextTitle1Style}" />
+                    </ListBoxItem>
+                </ListBox>
+            </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>
 

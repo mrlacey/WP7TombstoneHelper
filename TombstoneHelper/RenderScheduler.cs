@@ -32,7 +32,10 @@ namespace TombstoneHelper
                 {
                     action();
                 }
-                catch { }
+                catch
+                {
+                    // We DO want to suppress any errors here
+                }
             }
         }
     }
