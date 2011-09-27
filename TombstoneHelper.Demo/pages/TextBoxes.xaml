@@ -31,7 +31,7 @@
                 <TextBlock Text="second (doesn't have name)" />
                 <TextBox  />
                 <TextBlock Text="third (has name)" />
-                <TextBox Name="third" />
+                <TextBox Name="third" Text="some test ✆ text" />
             </StackPanel>
         </Grid>
     </Grid>
