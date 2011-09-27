@@ -16,7 +16,7 @@ namespace TombstoneHelper
                 {
                     if ((sv.HorizontalOffset > 0) || (sv.VerticalOffset > 0))
                     {
-                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}^{1}", sv.Name, pivotItemIndex), string.Format("{0}:{1}", sv.HorizontalOffset, sv.VerticalOffset));
+                        toSaveFrom.State.Add(string.Format("ScrollViewer^{0}^{1}", sv.Name, pivotItemIndex), string.Format("{0}✆{1}", sv.HorizontalOffset, sv.VerticalOffset));
                     }
                 }
             }
@@ -26,7 +26,7 @@ namespace TombstoneHelper
         {
             if (toRestoreTo is ScrollViewer)
             {
-                var detail = details.ToString().Split(':');
+                var detail = details.ToString().Split('✆');
 
                 if (detail[0] != "0")
                 {
