@@ -6,6 +6,8 @@ namespace TombstoneHelper
 {
     internal class TextBoxTombstoner : ICanTombstone
     {
+        /// Note that this Tombstoner uses the '✆' character as a separator
+        /// - It should be very unlikely that this character will ever be in user entered text but even if it is we handle that too. ;)
         public void Save(FrameworkElement element, int pivotItemIndex, PhoneApplicationPage toSaveFrom)
         {
             if (element is TextBox)
@@ -17,7 +19,7 @@ namespace TombstoneHelper
                     && !string.IsNullOrEmpty(tb.Text))
                 {
                     toSaveFrom.State.Add(string.Format("TextBox^{0}^{1}", tb.Name, pivotItemIndex),
-                                         string.Format("{0}:{1}:{2}", tb.Text,
+                                         string.Format("{0}✆{1}✆{2}", tb.Text,
                                                                       tb.SelectionStart,
                                                                       tb.SelectionLength));
                 }
@@ -28,12 +30,19 @@ namespace TombstoneHelper
         {
             if (toRestoreTo is TextBox)
             {
-                var detail = details.ToString().Split(':');
+                var detail = details.ToString().Split('✆');
 
-                (toRestoreTo as TextBox).Text = detail[0];
+                string textToRestore = string.Empty;
 
-                (toRestoreTo as TextBox).SelectionStart = int.Parse(detail[1]);
-                (toRestoreTo as TextBox).SelectionLength = int.Parse(detail[2]);
+                for (int i = 0; i < detail.Length - 2; i++)
+                {
+                    textToRestore += detail[i] + "✆";
+                }
+
+                (toRestoreTo as TextBox).Text = textToRestore.TrimEnd('✆');
+
+                (toRestoreTo as TextBox).SelectionStart = int.Parse(detail[detail.Length - 2]);
+                (toRestoreTo as TextBox).SelectionLength = int.Parse(detail[detail.Length - 1]);
             }
         }
     }
